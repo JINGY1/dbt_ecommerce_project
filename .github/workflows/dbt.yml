@@ -1,0 +1,20 @@
+name: dbt build
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GCP_test_SA_KEY: ${{ secrets.GCP_test_SA_KEY }}
+      DBT_PROFILES_DIR: ./ci          # tells dbt to use ci/profiles.yml
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install dbt-bigquery
+      - run: dbt deps
+      - run: dbt build --target ci

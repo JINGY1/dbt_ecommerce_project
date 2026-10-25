@@ -1,0 +1,12 @@
+ecommerce_project:
+  target: ci
+  outputs:
+    ci:
+      type: bigquery
+      method: service-account-json
+      project: test-353401
+      dataset: dbt_transformation
+      location: US                 # must match thelook (US); EU only if you went CSV-only
+      threads: 4
+      job_execution_timeout_seconds: 300
+      keyfile_json: "{{ env_var('GCP_test_SA_KEY') | as_native }}"
