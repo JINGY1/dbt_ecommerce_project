@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_thelook__users
+    columns:
+      - name: web_customer_id
+        tests: [unique, not_null]
+      - name: traffic_source
+        tests:
+          - accepted_values:
+              values: ['Search', 'Organic', 'Facebook', 'Email', 'Display']     # deliberately incomplete
