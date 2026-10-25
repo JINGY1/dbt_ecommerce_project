@@ -8,4 +8,4 @@ models:
       - name: traffic_source
         tests:
           - accepted_values:
-              values: ['Search', 'Organic']     # deliberately incomplete
+              values: ['Search', 'Organic', 'Facebook', 'Email', 'Display']     # deliberately incomplete
