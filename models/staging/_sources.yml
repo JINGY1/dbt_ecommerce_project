@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: thelook
+    description: Online store system of record (Google's synthetic public dataset).
+    database: bigquery-public-data      # = GCP project
+    schema: thelook_ecommerce           # = BigQuery dataset
+    tables:
+      - name: users
+        description: One row per online customer account.
+      - name: orders
+      - name: order_items
+        description: One row per item sold. Price lives here, not on orders.
+      - name: events
+        description: Web events. Large-ish — select only the columns you need.
