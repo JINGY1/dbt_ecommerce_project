@@ -1,0 +1,28 @@
+version: 2
+
+seeds:
+  - name: raw_loyalty_members
+    description: Stand-in for the loyalty card system. One row per membership, not per person.
+    columns:
+      - name: member_no
+        data_tests: [unique, not_null]
+      - name: contact_email
+        data_tests: [not_null]
+
+  - name: raw_store_orders
+    description: Stand-in for in-store tills. Includes guest and anonymous sales.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+
+  - name: country_codes
+    description: Maps every country spelling seen in the sources to ISO-3166 alpha-2.
+    columns:
+      - name: country_name
+        data_tests: [unique, not_null]
+      - name: country_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['CN','US','BR','KR','FR','GB','ES','DE','JP','AU','BE','PL','CO','AT','SE']
