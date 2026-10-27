@@ -3,8 +3,8 @@ version: 2
 sources:
   - name: thelook
     description: Online store system of record (Google's synthetic public dataset).
-    database: bigquery-public-data      # = GCP project
-    schema: thelook_ecommerce           # = BigQuery dataset
+    database: bigquery-public-data     
+    schema: thelook_ecommerce        
     tables:
       - name: users
         description: One row per online customer account.

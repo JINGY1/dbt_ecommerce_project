@@ -1,6 +1,4 @@
--- Plain table while on the BigQuery sandbox: MERGE is unavailable there, and
--- partitions older than 60 days are deleted. Restore incremental + partition_by
--- once billing is enabled.
+-- Merge action
 {{ config(
     materialized = 'table',
     cluster_by = ['channel', 'order_status']
@@ -16,7 +14,6 @@ people_by_web_id as (
     where web_customer_id is not null
 ),
 
--- guest emails resolve only when exactly one person has that email
 people_by_email as (
     select email, any_value(person_key) as person_key
     from {{ ref('dim_customer_profile') }}

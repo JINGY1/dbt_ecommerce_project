@@ -2,7 +2,6 @@
 -- Rule: merge only when the email belongs to exactly one thelook account.
 
 with loyalty as (
-    -- Lindsey Hill's two memberships collapse into one row here
     select
         email,
         string_agg(loyalty_member_id, ',' order by loyalty_member_id)           as loyalty_member_ids,
