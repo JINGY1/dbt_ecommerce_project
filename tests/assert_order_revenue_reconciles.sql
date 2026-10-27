@@ -1,8 +1,3 @@
--- Online revenue in fct_orders must equal the sum of thelook order items.
--- Compare orders placed before today only: thelook adds orders during the day.
--- Both sides are cut off by the ORDER's date: an item's own created_at can
--- differ from its order's by several days, so cutting items by their own
--- date would compare different sets of orders.
 with orders_before_today as (
     select order_id
     from {{ ref('stg_thelook__orders') }}

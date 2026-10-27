@@ -15,7 +15,6 @@ loyalty as (
     select * from {{ ref('int_identity__loyalty_matched') }}
 ),
 
--- every thelook account is a person, enriched with loyalty data when matched
 web_people as (
     select
         to_hex(md5(concat('web:', cast(w.web_customer_id as string))))   as person_key,
@@ -24,7 +23,6 @@ web_people as (
         w.email,
         w.first_name,
         w.last_name,
-        -- survivorship: loyalty wins on country (the member maintains it), web otherwise
         coalesce(l.loyalty_country_code, w.web_country_code)            as country_code,
         coalesce(l.loyalty_country_code != w.web_country_code, false)   as has_country_conflict,
         l.phone,
@@ -36,7 +34,6 @@ web_people as (
         on l.matched_web_customer_id = w.web_customer_id
 ),
 
--- loyalty members we could not (or must not) merge become their own person
 loyalty_people as (
     select
         to_hex(md5(concat('loyalty:', email)))                          as person_key,

@@ -16,7 +16,7 @@ select
     coalesce(s.lifetime_value_usd, 0)                           as lifetime_value_usd,
     s.last_ordered_at,
     date_diff(current_date(), date(s.last_ordered_at), day)     as days_since_last_order,
-    -- rules apply in order; lapsed comes before high_value on purpose (active-now question)
+    -- rules apply in order; lapsed comes before high_value on purpose 
     case
         when s.person_key is null
             then 'no_purchase'

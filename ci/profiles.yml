@@ -6,7 +6,7 @@ ecommerce_project:
       method: service-account-json
       project: dbt-project-512913
       dataset: dbt_ci
-      location: US                 # must match thelook (US); EU only if you went CSV-only
+      location: US                
       threads: 4
       job_execution_timeout_seconds: 300
       keyfile_json: "{{ env_var('GCP_test_SA_KEY') | as_native }}"
