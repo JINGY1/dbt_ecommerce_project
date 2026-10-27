@@ -34,3 +34,26 @@ models:
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: view
+
+
+# Seeds Configuration
+seeds:
+  ecommerce_project:
+    raw_loyalty_members:
+      +column_types:
+        member_no: string
+        contact_email: string
+        phone: string
+        home_country: string
+        joined_ts: timestamp
+    raw_store_orders:
+      +column_types:
+        order_id: string
+        customer_id: int64
+        guest_email: string
+        order_ts: timestamp
+        amount_usd: numeric
+    country_codes:
+      +column_types:
+        country_name: string
+        country_code: string

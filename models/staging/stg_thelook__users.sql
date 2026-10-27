@@ -2,7 +2,7 @@ with source as (
     select * from {{ source('thelook', 'users') }}
 ),
 
-renamed as (
+transformed as (
     select
         cast(id as int64)                 as web_customer_id,
         lower(trim(email))                as email,
@@ -14,4 +14,4 @@ renamed as (
     from source
 )
 
-select * from renamed
+select * from transformed
