@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: dim_customer_profile
+    description: >
+      One row per resolved person across thelook web accounts and loyalty members.
+      Grain: person. Owner: Jing Yi. Refresh: daily.
+      A loyalty member is merged into a web account only when the email matches
+      exactly one account; ambiguous matches stay separate and flagged.
+      Country survivorship: loyalty wins, web otherwise.
+    columns:
+      - name: person_key
+        description: Surrogate key for the resolved person (MD5 of web id or loyalty email).
+        data_tests: [unique, not_null]
+      - name: web_customer_id
+        description: Null for loyalty-only and ambiguous people.
+        data_tests: [unique]
+      - name: match_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['web_only', 'matched', 'loyalty_only', 'ambiguous']
+      - name: country_code
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('country_codes')
+                field: country_code
+              config:
+                severity: warn
+
+  - name: dim_customer_segment
+    description: >
+      One segment per person, rules-based. Thresholds are project vars
+      (segment_high_value_usd, segment_lapsed_days). Rules apply in order:
+      no_purchase, lapsed, high_value, repeat, single_purchase.
+    columns:
+      - name: person_key
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer_profile')
+                field: person_key
+      - name: segment
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['no_purchase', 'lapsed', 'high_value', 'repeat', 'single_purchase']
+
+  - name: fct_orders
+    description: >
+      One row per order across online (thelook) and store (POS seed) channels.
+      Grain: order. Store orders are assumed complete at payment.
+      Revenue reporting must filter on is_revenue.
+    columns:
+      - name: order_id
+        description: String. Online ids are thelook numbers, store ids start with S-.
+        data_tests: [unique, not_null]
+      - name: person_key
+        description: Null for orphan and anonymous store sales (S-9005, S-9008).
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customer_profile')
+                field: person_key
+      - name: channel
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['online', 'store']
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['complete', 'shipped', 'processing', 'cancelled', 'returned']
+      - name: amount_usd
+        data_tests: [not_null]
+      - name: web_customer_id
+        description: Null for guest and anonymous store sales.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_thelook__users')
+                field: web_customer_id
+              config:
+                severity: warn

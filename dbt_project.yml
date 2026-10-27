@@ -32,8 +32,18 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   ecommerce_project:
     # Config indicated by + and applies to all files under models/example/
-    example:
+    staging:
       +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
+
+
+# Segment thresholds — business decisions, set from profiling on 2026-10-28
+vars:
+  segment_high_value_usd: 190   # ≈ top 10% of buyers by lifetime value
+  segment_lapsed_days: 365
 
 
 # Seeds Configuration
